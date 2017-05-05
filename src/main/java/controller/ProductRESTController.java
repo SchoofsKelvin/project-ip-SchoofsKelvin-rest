@@ -5,11 +5,15 @@
  */
 package controller;
 
+import domain.Product;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import service.Service;
 
 /**
@@ -17,7 +21,8 @@ import service.Service;
  * @author Kelvin
  */
 @Controller
-@RequestMapping(value = "/rest/countries")
+@ResponseBody
+@RequestMapping(value = "/products")
 public class ProductRESTController {
 
     private final Service service;
@@ -27,8 +32,15 @@ public class ProductRESTController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List getProducts() {
+    public List<Product> getProducts() {
         return service.getProducts();
 
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(method = RequestMethod.POST)
+    public Product createProduct(Product newProduct) {
+        service.addProduct(newProduct);
+        return newProduct;
     }
 }
