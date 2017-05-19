@@ -26,6 +26,13 @@
                 text-align: left;
                 vertical-align: top;
             }
+            label {
+                width: 100px;
+                display: inline-block;
+            }
+            button {
+                margin: 5px 0;
+            }
         </style>
     </head>
     <body>
@@ -34,10 +41,32 @@
         <div>
             <table>
                 <tbody id="products">
-                    <tr><th>Name</th><th>Description</th><th>Price</th></tr>
+                    <tr><th>Name</th><th>Description</th><th>Price</th><th>Actions</th></tr>
                 </tbody>
             </table>
         </div>
+        <p id="status" style="font-weight: bold;"></p>
+        <form id="form">
+            <p>
+                <label for="name">Naam</label>
+                <input id="name" name="name" type="text" value="">
+
+            </p>
+            <p>
+                <label for="name">Beschrijving</label>
+                <input id="description" name="description" type="text" value="">
+
+            </p>
+            <p>
+                <label for="name">Prijs (EUR)</label>
+                <input id="price" name="price" step="0.01" type="text" value="">
+
+            </p>
+            <p id="formstatus">Creating a new product</p>
+            <input id="submit" type="submit" value="Create">
+            <button id="reset">Reset</button>
+            <input id="productid" name="productid" type="hidden" value="">
+        </form>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="js/panel.js"></script>
     </body>
