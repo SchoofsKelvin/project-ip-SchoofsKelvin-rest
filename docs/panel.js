@@ -11,6 +11,7 @@ const setStatus = (txt, cod) => {
     status.text(txt);
     code.text(cod || "");
     hljs.highlightBlock(code[0]);
+    cod ? code.show() : code.hide();
 };
 
 function refreshProducts() {
@@ -63,7 +64,7 @@ const submit = $("#submit");
 
 function selectProduct(product) {
     submit.val("Update");
-    form.text("Updating product with id " + product.productid);
+    setStatus("Updating product with id " + product.productid);
     form.show();
     name.val(product.name);
     description.val(product.description);
@@ -90,7 +91,7 @@ form.submit(() => sendProduct(productid.val() ? "put" : "post"));
 reset.click((e) => {
     e.preventDefault();
     submit.text("Create");
-    form.text("Creating a new product");
+    setStatus("Creating a new product");
     productid.val(null);
     name.val(null);
     price.val(null);
