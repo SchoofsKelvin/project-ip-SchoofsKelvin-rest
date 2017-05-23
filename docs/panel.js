@@ -5,14 +5,18 @@ const url = $("#url");
 const buttons = $("#buttons");
 const products = $("#products");
 const status = $("#status");
+const code = $("#code");
 
-hljs.configure({useBR: true});
-const setStatus = (txt) => (status.text(txt), hljs.highlightBlock(status[0]));
+const setStatus = (txt, cod) => {
+    status.text(txt);
+    code.text(cod || "");
+    hljs.highlightBlock(code[0]);
+};
 
 function refreshProducts() {
     setStatus("Refreshing...");
     $.ajax(url.val() + "/products", {success: function (data) {
-            setStatus("Refreshed: " + JSON.stringify(data));
+            setStatus("Refreshed", JSON.stringify(data));
             $("tr", products).slice(1).remove();
             $.each(data, function (index, product) {
                 var tr = $("<tr/>").appendTo(products);
@@ -28,11 +32,11 @@ function refreshProducts() {
                             n.text(data.name);
                             d.text(data.description);
                             p.text(data.price + " EUR");
-                        }, dataType: "json", error: (xhr, stat, err) => (setStatus(err + ": " + xhr.responseText), tr.remove())
+                        }, dataType: "json", error: (xhr, stat, err) => (setStatus(err, xhr.responseText), tr.remove())
                     });
                 });
             });
-        }, error: (xhr, stat, err) => setStatus(err + ": " + xhr.responseText)});
+        }, error: (xhr, stat, err) => setStatus(err, xhr.responseText)});
 }
 
 $(document).ready(refreshProducts);
@@ -43,8 +47,8 @@ function deleteProduct(product) {
     setStatus("Deleting " + product.name);
     $.ajax(url.val() + "/products/" + product.productid, {
         method: "delete",
-        error: (xhr, stat, err) => setStatus(err + ": " + xhr.responseText),
-        success: (data) => setStatus("Ok: " + data)
+        error: (xhr, stat, err) => setStatus(err, xhr.responseText),
+        success: (data) => setStatus("OK", data)
     });
 }
 
@@ -59,7 +63,7 @@ const submit = $("#submit");
 
 function selectProduct(product) {
     submit.val("Update");
-    formsetStatus("Updating product with id " + product.productid);
+    form.text("Updating product with id " + product.productid);
     form.show();
     name.val(product.name);
     description.val(product.description);
@@ -76,8 +80,8 @@ function sendProduct(method) {
             description: description.val(),
             price: price.val()
         }),
-        error: (xhr, stat, err) => setStatus(err + ": " + xhr.responseText),
-        success: (data) => setStatus("Ok: " + JSON.stringify(data))
+        error: (xhr, stat, err) => setStatus(err, xhr.responseText),
+        success: (data) => setStatus("OK", JSON.stringify(data))
     });
     return false;
 }
@@ -86,7 +90,7 @@ form.submit(() => sendProduct(productid.val() ? "put" : "post"));
 reset.click((e) => {
     e.preventDefault();
     submit.text("Create");
-    formsetStatus("Creating a new product");
+    form.text("Creating a new product");
     productid.val(null);
     name.val(null);
     price.val(null);

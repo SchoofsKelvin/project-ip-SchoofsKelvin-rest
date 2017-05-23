@@ -8,7 +8,6 @@ package controller;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import domain.Product;
 import java.util.List;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -100,7 +99,7 @@ public class ProductRESTController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    public Product createProduct(@RequestBody @Valid Product product, BindingResult result) {
+    public Product createProduct(@RequestBody Product product, BindingResult result) {
         service.addProduct(product);
         return product;
     }
