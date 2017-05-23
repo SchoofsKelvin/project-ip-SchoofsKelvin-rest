@@ -1,13 +1,18 @@
 
+/* global hljs */
+
 const url = $("#url");
 const buttons = $("#buttons");
 const products = $("#products");
 const status = $("#status");
 
+hljs.configure({useBR: true});
+const setStatus = (txt) => (status.text(txt), hljs.highlightBlock(status[0]));
+
 function refreshProducts() {
-    status.text("Refreshing...");
+    setStatus("Refreshing...");
     $.ajax(url.val() + "/products", {success: function (data) {
-            status.text("Refreshed");
+            setStatus("Refreshed: " + JSON.stringify(data));
             $("tr", products).slice(1).remove();
             $.each(data, function (index, product) {
                 var tr = $("<tr/>").appendTo(products);
@@ -23,11 +28,11 @@ function refreshProducts() {
                             n.text(data.name);
                             d.text(data.description);
                             p.text(data.price + " EUR");
-                        }, dataType: "json", error: (xhr, stat, err) => (status.text(err + ": " + xhr.responseText), tr.remove())
+                        }, dataType: "json", error: (xhr, stat, err) => (setStatus(err + ": " + xhr.responseText), tr.remove())
                     });
                 });
             });
-        }, error: (xhr, stat, err) => status.text(err + ": " + xhr.responseText)});
+        }, error: (xhr, stat, err) => setStatus(err + ": " + xhr.responseText)});
 }
 
 $(document).ready(refreshProducts);
@@ -35,11 +40,11 @@ $(document).ready(refreshProducts);
 $("<button>Refresh</button>").appendTo(buttons).click(refreshProducts);
 
 function deleteProduct(product) {
-    status.text("Deleting " + product.name);
+    setStatus("Deleting " + product.name);
     $.ajax(url.val() + "/products/" + product.productid, {
         method: "delete",
-        error: (xhr, stat, err) => status.text(err + ": " + xhr.responseText),
-        success: (data) => status.text("Ok: " + data)
+        error: (xhr, stat, err) => setStatus(err + ": " + xhr.responseText),
+        success: (data) => setStatus("Ok: " + data)
     });
 }
 
@@ -54,7 +59,7 @@ const submit = $("#submit");
 
 function selectProduct(product) {
     submit.val("Update");
-    formstatus.text("Updating product with id " + product.productid);
+    formsetStatus("Updating product with id " + product.productid);
     form.show();
     name.val(product.name);
     description.val(product.description);
@@ -71,11 +76,20 @@ function sendProduct(method) {
             description: description.val(),
             price: price.val()
         }),
-        error: (xhr, stat, err) => status.text(err + ": " + xhr.responseText),
-        success: (data) => status.text("Ok: " + JSON.stringify(data))
+        error: (xhr, stat, err) => setStatus(err + ": " + xhr.responseText),
+        success: (data) => setStatus("Ok: " + JSON.stringify(data))
     });
     return false;
 }
 
 form.submit(() => sendProduct(productid.val() ? "put" : "post"));
-reset.click((e) => (e.preventDefault(), submit.text("Create"), formstatus.text("Creating a new product"), productid.val(null), name.val(null), price.val(null), description.val(null)));
+reset.click((e) => {
+    e.preventDefault();
+    submit.text("Create");
+    formsetStatus("Creating a new product");
+    productid.val(null);
+    name.val(null);
+    price.val(null);
+    description.val(null);
+}
+);
