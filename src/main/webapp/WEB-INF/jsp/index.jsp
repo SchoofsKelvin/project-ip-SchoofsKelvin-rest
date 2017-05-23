@@ -35,7 +35,7 @@
     <body>
         <h1>Documentation</h1>
         <h2>Example of a Product</h2>
-        <code>{"name":"A","description":"B","price":100,"productid":"3"}</code>
+        <pre><code>{"name":"A","description":"B","price":100,"productid":"3"}</code></pre>
         <jsp:include page="memberdoc.jsp">
             <jsp:param name="method" value="GET" />
             <jsp:param name="url" value="/products" />
