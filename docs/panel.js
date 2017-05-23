@@ -28,12 +28,17 @@ function refreshProducts() {
                 $("<button/>").appendTo(tr).text("Select").click(() => selectProduct(product));
                 $("<button/>").appendTo(tr).text("Delete").click(() => deleteProduct(product));
                 $("<button/>").appendTo(tr).text("Refresh").click(() => {
-                    $.ajax("products/" + product.productid, {
+                    setStatus("Refreshing product with productid " + product.productid);
+                    $.ajax(url.val() + "/products/" + product.productid, {
                         success: (data) => {
+                            setStatus("Refreshed product with productid " + product.productid, JSON.stringify(data));
                             n.text(data.name);
                             d.text(data.description);
                             p.text(data.price + " EUR");
-                        }, dataType: "json", error: (xhr, stat, err) => (setStatus(err, xhr.responseText), tr.remove())
+                        }, dataType: "json", error: (xhr, stat, err) => {
+                            setStatus(err, xhr.responseText);
+                            tr.remove();
+                        }
                     });
                 });
             });
@@ -90,7 +95,7 @@ function sendProduct(method) {
 form.submit(() => sendProduct(productid.val() ? "put" : "post"));
 reset.click((e) => {
     e.preventDefault();
-    submit.text("Create");
+    submit.val("Create");
     setStatus("Creating a new product");
     productid.val(null);
     name.val(null);
