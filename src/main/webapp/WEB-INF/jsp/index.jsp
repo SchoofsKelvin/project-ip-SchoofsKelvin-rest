@@ -28,9 +28,14 @@
                 margin: 10px 0;
             }
         </style>
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
     </head>
     <body>
         <h1>Documentation</h1>
+        <h2>Example of a Product</h2>
+        <code>{"name":"A","description":"B","price":100,"productid":"3"}</code>
         <jsp:include page="memberdoc.jsp">
             <jsp:param name="method" value="GET" />
             <jsp:param name="url" value="/products" />
